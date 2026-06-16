@@ -1,0 +1,67 @@
+# ==========================================
+# Python Ignore Patterns
+# ==========================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these written by a fallback execution, prevent archive tracking
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit testing / coverage reports
+htmlcov/
+.tosca/
+.pytest_cache/
+.unittest/
+
+# Environments
+.env
+.venv
+venv
+ENV
+env
+bin/
+shims/
+
+# ==========================================
+# System & Editor Ignore Patterns
+# ==========================================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
