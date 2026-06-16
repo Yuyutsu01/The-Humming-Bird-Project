@@ -174,12 +174,20 @@ class AIAnalystService:
             try:
                 return await self._call_gemini_api(query)
             except Exception as e:
-                logger.error(f"Gemini API call failed: {e}. Falling back to rule-based engine.")
-        elif settings.OPENAI_API_KEY:
+                logger.error(f"Gemini API call failed: {e}. Falling back to next available LLM.")
+        
+        if settings.OPENAI_API_KEY:
             try:
                 return await self._call_openai_api(query)
             except Exception as e:
-                logger.error(f"OpenAI API call failed: {e}. Falling back to rule-based engine.")
+                logger.error(f"OpenAI API call failed: {e}. Falling back to next available LLM.")
+
+        # Check if local Ollama LLM execution is enabled
+        if settings.USE_OLLAMA:
+            try:
+                return await self._call_ollama_api(query)
+            except Exception as e:
+                logger.error(f"Ollama local LLM call failed: {e}. Falling back to rule-based engine.")
 
         # Local Rule-based fallback engine: match keywords to return pre-constructed financial reports
         matched_key = None
@@ -330,6 +338,53 @@ class AIAnalystService:
             
             return {
                 "engine": "OpenAI GPT-4 API",
+                "query": query,
+                **parsed_data
+            }
+
+    async def _call_ollama_api(self, query: str) -> dict:
+        """
+        Calls local Ollama instance to generate structured economic analysis.
+        Uses format='json' configuration parameter to enforce schema outputs.
+        """
+        # Formulate instructions for structured financial output
+        prompt = (
+            "You are a Senior Economic Analyst. Analyze the following user economic question and return a structured JSON response. "
+            "The JSON must have the following keys: 'title', 'summary', 'cause', 'effect', 'india_impact' (list of strings), and "
+            "'details' (object with keys 'root_cause', 'risks', 'opportunities', 'historical_comparison', 'predictions').\n"
+            f"Question: {query}"
+        )
+        
+        url = f"{settings.OLLAMA_BASE_URL.rstrip('/')}/api/generate"
+        payload = {
+            "model": settings.OLLAMA_MODEL,
+            "prompt": prompt,
+            "stream": False,
+            "format": "json"
+        }
+        
+        async with httpx.AsyncClient() as client:
+            # Enforcing a generous 60.0s timeout to allow local models to warm up / execute
+            resp = await client.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=60.0)
+            resp.raise_for_status()
+            json_resp = resp.json()
+            
+            import json
+            text_content = json_resp["response"]
+            parsed_data = json.loads(text_content)
+            
+            # Enforce schema integrity and fallback structures in case the local LLM omits keys
+            for key in ["title", "summary", "cause", "effect", "india_impact", "details"]:
+                if key not in parsed_data:
+                    parsed_data[key] = "" if key not in ["india_impact", "details"] else ([] if key == "india_impact" else {})
+            
+            if "details" in parsed_data and isinstance(parsed_data["details"], dict):
+                for subkey in ["root_cause", "risks", "opportunities", "historical_comparison", "predictions"]:
+                    if subkey not in parsed_data["details"]:
+                        parsed_data["details"][subkey] = ""
+            
+            return {
+                "engine": f"Local Ollama ({settings.OLLAMA_MODEL})",
                 "query": query,
                 **parsed_data
             }
