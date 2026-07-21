@@ -240,10 +240,5 @@ OpenTerminal/                            # Root workspace directory
 
 ---
 
-## Contributors
-* **Yuyutsu01** - [GitHub Profile](https://github.com/Yuyustu01)
-
----
-
 ## License
 This project is licensed under the **MIT License**. See the [LICENSE](file:///c:/Users/shiva/OneDrive/Desktop/projects/OpenTerminal/LICENSE) file for details.
