@@ -105,3 +105,7 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# AI Agent Configuration & Instruction Files
+AGENTS.md
+CLAUDE.md
