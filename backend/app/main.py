@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
 from backend.app.routers import market, economy, ai, news, scenario, ws
 from backend.app.services.market_data import market_data_service
+from backend.app.core.boot import bootstrap_modules
 
 # Configure logger
 logging.basicConfig(
@@ -52,6 +53,9 @@ app.include_router(ai.router, prefix=settings.API_V1_STR)
 app.include_router(news.router, prefix=settings.API_V1_STR)
 app.include_router(scenario.router, prefix=settings.API_V1_STR)
 app.include_router(ws.router, prefix=settings.API_V1_STR)
+
+# Load dynamically registered agent modules
+bootstrap_modules(app)
 
 @app.get("/")
 def get_root():
