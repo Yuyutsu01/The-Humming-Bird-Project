@@ -1,131 +1,189 @@
 # OpenTerminal (The Hummingbird Project)
 
-> **A High-Density, Cinematic Macro-Economic Intelligence Terminal Blueprint**
+> **A Modular, Agent-Driven Economic Intelligence Operating System (EIOS)**
 
 ## Overview
-OpenTerminal is an open-source architectural blueprint for building a professional, high-performance financial desktop application. Designed to model the core user experience of institutional trading systems (such as Bloomberg or Interactive Brokers TWS), it translates complex global economic shocks into domestic transmission channels affecting the Indian market in real-time.
+OpenTerminal is an open-source financial operating system and desktop workstation. Designed to model the core user experience of institutional trading systems (such as Bloomberg or Reuters Eikon), it translates complex global economic shocks into domestic transmission channels affecting the Indian economy and financial markets in real time.
+
+EIOS evolves OpenTerminal from a client-server single-page dashboard into a fully decoupled, event-driven, multi-database, plugin-based operating system powered by autonomous AI Agent Swarms.
+
+---
 
 ## Problem
-Retail investors, students, and financial analysts often struggle to understand the complex, multi-layered transmission pathways of global macroeconomic shifts. Traditional financial tools are either highly gatekept (expensive subscriptions) or fail to visualize and simulate the interconnected, causal relationships between global indicators (like Brent Crude, US Fed interest rates, gold) and domestic metrics (like CPI inflation, Indian Rupee exchange rates, GDP growth, and FII flows).
+Retail investors, financial analysts, and economics students frequently struggle to comprehend the complex, multi-layered transmission pathways through which global macroeconomic shifts propagate into domestic markets. Traditional financial software is either gatekept by exorbitant subscription fees ($24,000+/year) or presents data in isolation without visualizing or simulating causal relationships between global triggers (such as Brent Crude spikes, US Federal Reserve rate hikes, or geopolitical escalation) and domestic transmission channels (USD/INR exchange rates, CPI inflation, RBI repo rates, GDP growth, and equity valuations).
+
+---
 
 ## Solution
-OpenTerminal solves this by providing a decoupled client-server architecture featuring:
-1. **Macroeconomic Transmission Channels**: Models the Commodity Price Channel, Interest Rate Differential Channel, and Safe-Haven Asset Channel dynamically.
-2. **Simulation Sandbox**: Allows real-time stress testing of macroeconomic parameters, immediately resolving offsets and visual updates.
-3. **Causal Graph Routing**: Traces the shortest propagation paths of economic shocks using node-link graphs.
-4. **AI Copilot (Narrative Engine)**: Synthesizes structured economic analyses leveraging Google Gemini, OpenAI GPT, or local Ollama instances, with automatic local fallback engines.
+OpenTerminal bridges this gap by providing an open-source institutional financial workstation featuring:
+1. **Macroeconomic Transmission Modeling**: Simulates the Commodity Price Channel, Interest Rate Differential Channel, and Safe-Haven Asset Channel dynamically.
+2. **Interactive Scenario Simulator**: Enables real-time stress testing of macro parameters (Crude prices, Fed rates, Geopolitical Risk Index) with instant offset calculations.
+3. **Causality Graph Engine**: Traces the shortest propagation pathways between economic variables using interactive node-link network graphs.
+4. **Resilient AI Copilot Swarm**: Delivers institutional narrative reports leveraging a multi-tier fallback architecture (Google Gemini ➔ OpenAI GPT-4 ➔ Local Ollama ➔ Offline Rule-Based Semantic Templates).
+5. **Event-Driven Plugin System**: A modular micro-kernel architecture where every feature is an independent plugin module auto-discovered at runtime.
+6. **Provider-Agnostic Data Adapters**: Unified ports decoupling data ingestion across Yahoo Finance, FRED, World Bank, RBI, RSS news feeds, and local CSV files.
 
 ---
 
-## Features
-* **Glassmorphic Multi-Dashboard Interface**: Five specialized desktop panels for different roles:
-  * **Investor**: Tracks real-time commodity tickers, equities indexes, and currency spreads.
-  * **Economist**: Hosts the interactive scenario simulator and stress-test suite.
-  * **Student**: An interactive educational sandbox breaking down economic jargon.
-  * **Research**: Synthesizes formal research papers and expert commentary.
-  * **Government**: Aggregates alternative data, tax receipts, and fiscal targets.
-* **Scenario Simulator Sandbox**: Models custom economic shocks (e.g., Brent Crude spikes to $120/bbl, US Federal Reserve holding rates at 5.5%, Geopolitical risk escalating) and analyzes the immediate, simulated effects on India's core indicators.
-* **Macroeconomic Causality Graph**: An interactive node-link graph mapping variables like interest rates, capital flows, and earnings. It traces and explains the shortest causal pathway between any two nodes.
-* **Omnibox Command Bar**: A global command palette activated with `/` or `Ctrl+K`. It allows users to quickly jump between dashboards, run simulations, or trigger the AI Copilot.
-* **AI Copilot (Narrative Engine)**: A sidebar analyst responding to natural-language economic questions with tailored summaries, root-cause assessments, opportunities, and risk reports.
+## EIOS Architecture & System Design
 
----
-
-## Architecture
-OpenTerminal utilizes a decoupled client-server architecture. It features a high-performance single-page Next.js dashboard client and an asynchronous FastAPI backend service running live simulations and data dispatchers.
-
-```mermaid
-graph TD
-    subgraph Client [Frontend Client - Next.js & React]
-        UI["Dashboard Terminal UI (Glassmorphic Pages)"]
-        Command["Keyboard Command Bar (Omnibox Context Selector)"]
-        GraphView["Macro Graph (Interactive Relationship Visualizer)"]
-        WS_Client["WebSockets Client Connection"]
-    end
-
-    subgraph Server [Backend Engine - FastAPI & Python]
-        WS_Router["WebSocket Router (/api/ws)"]
-        API_Gate["REST HTTP API Gateway (/api/...)"]
-        MarketService["Market Data Service (Yahoo Finance & Simulation)"]
-        ScenarioService["Scenario Simulator Service (Transmission Solver)"]
-        AIAnalyst["AI Analyst Service (Narrative Orchestrator)"]
-    end
-
-    subgraph LLM [External AI Core & Local Models]
-        Gemini["Google Gemini API"]
-        OpenAI["OpenAI GPT API"]
-        Ollama["Local Ollama Instance"]
-    end
-
-    WS_Client <-->|ws://localhost:8000/api/ws| WS_Router
-    UI -->|HTTP GET /api/scenario/simulate| API_Gate
-    UI -->|HTTP GET /api/ai/ask| API_Gate
-    
-    WS_Router -->|Generate Brownian Market Updates| MarketService
-    API_Gate -->|Compute Macroeconomic Shock Shifts| ScenarioService
-    API_Gate -->|Query & Synthesize Narrative| AIAnalyst
-    
-    AIAnalyst -->|Gemini-Pro API| Gemini
-    AIAnalyst -->|GPT-4-Turbo API| OpenAI
-    AIAnalyst -->|Local Ollama API| Ollama
-    AIAnalyst -->|Local Fallback Narrative Engine| LocalEngine["Rule-Based Semantic Templates"]
+```
+                               ┌─────────────────────────────────────────────────────────┐
+                               │                    PRESENTATION LAYER                   │
+                               │  (Next.js 16 Client / CLI / External API Consumers)     │
+                               └────────────────────────────┬────────────────────────────┘
+                                                            │ REST / WebSockets / SSE
+                                                            ▼
+                               ┌─────────────────────────────────────────────────────────┐
+                               │                    API GATEWAY & ROUTER                 │
+                               │          (Dynamic Module Route & WS Discovery)          │
+                               └────────────────────────────┬────────────────────────────┘
+                                                            │ Task Dispatch
+                                                            ▼
+                               ┌─────────────────────────────────────────────────────────┐
+                               │                   SUPERVISOR AGENT                      │
+                               │     (Planner, Router, Memory, Reasoning, Aggregator)    │
+                               └──────────────┬───────────────────────────▲──────────────┘
+                                              │ Publish Task              │ Return Synthesis
+                                              ▼                           │
+ ┌────────────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────┐
+ │                                                      EVENT BUS (Pub/Sub)                                                        │
+ └──────┬──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬───────┘
+        │ Raw News             │ Indicator Shift      │ Forecast Req         │ Causal Path Req      │ Risk Assessment      │ Alert
+        ▼                      ▼                      ▼                      ▼                      ▼                      ▼
+ ┌──────────────┐       ┌──────────────┐       ┌──────────────┐       ┌──────────────┐       ┌──────────────┐       ┌──────────────┐
+ │  News Agent  │       │  Macro Agent │       │Forecast Agent│       │ Graph Agent  │       │  Risk Agent  │       │ Alert Agent  │
+ └──────┬───────┘       └──────┬───────┘       └──────┬───────┘       └──────┬───────┘       └──────┬───────┘       └──────┬───────┘
+        │                      │                      │                      │                      │                      │
+ ┌──────┴──────────────────────┴──────────────────────┴──────────────────────┴──────────────────────┴──────────────────────┴───────┐
+ │                                                UNIFIED DATA & REPOSITORY LAYER                                                  │
+ └──────┬──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬───────┘
+        │ PostgreSQL           │ TimescaleDB          │ Neo4j                │ Qdrant               │ Redis                │ Adapters
+        ▼                      ▼                      ▼                      ▼                      ▼                      ▼
+ ┌──────────────┐       ┌──────────────┐       ┌──────────────┐       ┌──────────────┐       ┌──────────────┐       ┌──────────────┐
+ │ Relational DB│       │ Time-Series  │       │ Knowledge    │       │ Vector Store │       │ Cache/Queue  │       │ Data Source  │
+ │ (Users/Logs) │       │ (Ticks/Macro)│       │ (Causality)  │       │ (Embeddings) │       │ (Pub/Sub)    │       │ Adapters     │
+ └──────────────┘       └──────────────┘       └──────────────┘       └──────────────┘       └──────────────┘       └──────────────┘
 ```
 
-### System Workflow
-1. **Real-time Live Feed**: The Next.js frontend establishes a permanent WebSocket connection to `ws://localhost:8000/api/ws`. The backend streams simulated Brownian market ticks and triggers threshold-based alerts (e.g., Crude spikes or Gold surges) every 1.5 seconds.
-2. **Scenario Stress-Testing**: When a user adjusts parameters (Brent Crude, US Fed Rate, Geopolitical Risk) in the simulation panel, the frontend calls the REST API. The backend computes the transmission offsets and returns simulated output metrics (CPI Inflation, GDP Growth, Rupee exchange rates).
-3. **AI Copilot Assistance**: Queries entered into the Chat Copilot or Command Bar are evaluated by the AI service. If external keys are provided, it query-routes to OpenAI/Gemini/Ollama; otherwise, it matches keywords locally to output a high-fidelity structured analysis card.
+### Key Architectural Principles
+* **Hexagonal Architecture (Ports and Adapters)**: Core domain logic is completely isolated from external dependencies. Data sources implement `IDataAdapter`; storage engines implement `IRepository`.
+* **Dynamic Plugin System**: Features are packaged into self-contained plugin modules inside `backend/app/modules/` implementing `BaseModule` / `IPluginModule`. The boot loader (`bootstrap_modules`) dynamically discovers, initializes, and mounts routes without modifying core files.
+* **Event-Driven Pub/Sub**: Autonomous background agents communicate strictly via asynchronous domain events published onto the `EventBroker` (AsyncIO / Redis Pub/Sub).
+* **Dependency Injection Container**: A central `DependencyContainer` handles singleton resolution for event brokers, data adapters, and repository ports.
+
+---
+
+## Core Features
+
+### 1. Multi-Role Glassmorphic Dashboard
+Five desktop panels tailored for financial roles:
+* **Investor**: Real-time ticker feeds, custom SVG candlestick charts, and cross-asset correlation matrices.
+* **Economist**: Baseline macroeconomic indicators, interactive shock stress-test simulator, and AI forecasting trends with confidence intervals.
+* **Student**: Educational lesson modules and interactive macroeconomics quizzes.
+* **Research**: Geopolitical shock timelines and automated executive PDF report compiler.
+* **Government**: High-frequency alternative data tracking container port traffic and satellite night-light indices.
+
+### 2. Scenario Stress-Test Simulator
+Adjust parameters (Brent Crude, US Fed interest rate, Geopolitical Risk Index) via interactive sliders to observe instant simulated transmission impacts on CPI inflation, USD/INR exchange rates, RBI repo rate, GDP growth, and sector sensitivity indices.
+
+### 3. Macroeconomic Causality Network Graph
+An interactive SVG node-link visualization mapping variables (Crude Oil, Rupee, Corporate Profit Margins, Equity Multiples). Computes and highlights the shortest causal transmission paths between any two economic nodes.
+
+### 4. Omnibox Command Bar
+A global keyboard shortcut palette (`Ctrl+K` or `/`) allowing instant navigation between dashboards, scenario execution, and natural-language AI Analyst queries.
 
 ---
 
 ## Tech Stack
+
 ### Frontend Client
-* **Framework**: React 19, Next.js 15 (App Router), TypeScript
-* **Styling**: Tailwind CSS
+* **Framework**: React 19, Next.js 16 (App Router), TypeScript
+* **Styling**: Tailwind CSS v4, Glassmorphic CSS custom properties
 * **Icons**: Lucide React
-* **State & Networking**: WebSockets, React Context / State Hooks
+* **State & Networking**: WebSockets streaming client, React Context
 
 ### Backend Engine
 * **Language/Framework**: Python 3.9+, FastAPI, Uvicorn (ASGI Server)
-* **Mathematical Operations**: NumPy, Pandas, SciPy (Brownian motion simulations and regression mapping)
-* **Networking**: HTTPX (Asynchronous REST clients for LLM and financial integrations)
-* **Libraries**: `yfinance` (real-time market seeds), `pydantic-settings` (environment configuration management)
+* **Architecture**: Domain-Driven Design (DDD), Hexagonal Architecture, Event-Driven Pub/Sub
+* **Data Adapters**: Yahoo Finance (`yfinance`), FRED API, World Bank Open Data, RBI Data, RSS Feed Scraper, CSV Importer
+* **Math & Analytics**: NumPy, Pandas, SciPy (Brownian motion simulations and regression modeling)
+* **AI Orchestration**: Google Gemini Pro API, OpenAI GPT-4 API, Local Ollama (Llama 3.2), Rule-based Semantic Template Engine
 
 ---
 
-## Dataset (if applicable)
-* **Yahoo Finance API**: The backend uses the `yfinance` library to pull historical market structures as base seeds for currency spreads, stock indices, and oil/gold indicators.
-* **Pre-seeded Economic Indicators**: The simulation model references pre-seeded baseline domestic parameters representing the current state of India's macroeconomy (GDP, current account, inflation rates, and FII aggregates).
+## Data Provider Adapters Layer
+
+EIOS includes 6 provider-agnostic data adapters implementing the `IDataAdapter` interface:
+
+| Adapter | Source | Indicators / Metrics | Fallback Strategy |
+| :--- | :--- | :--- | :--- |
+| **`YFinanceAdapter`** | Yahoo Finance | Equities indices (`^NSEI`, `^GSPC`), commodities (`GC=F`, `BZ=F`), forex (`INR=X`) | Offline price matrix seed |
+| **`FREDAdapter`** | Federal Reserve Data | US Fed Funds Rate (`FEDFUNDS`), US CPI (`CPIAUCSL`), 10Y Yields (`GS10`) | Static macroeconomic seed series |
+| **`WorldBankAdapter`** | World Bank Open Data | India Annual GDP Growth (`NY.GDP.MKTP.KD.ZG`), CPI Inflation, Trade % of GDP | Structural annual series seed |
+| **`RBIAdapter`** | Reserve Bank of India | Repo Rate (`RBI_REPO`), Reverse Repo, CRR, SLR, Forex Reserves | Policy decision baseline seed |
+| **`RSSAdapter`** | Financial News RSS Feeds | RSS News articles, Monetary Policy releases, Energy announcements | Pre-seeded financial news feed |
+| **`CSVAdapter`** | Local Files | Proprietary offline time-series datasets (`data/*.csv`) | Synthetic time-series generator |
 
 ---
 
-## Results
-* **FastAPI Performance**: Average API response latencies are kept under 100ms. WebSocket broadcast ticks update at a steady 1.5s interval without memory leaks.
-* **Structured Fallback Schema**: The local AI engine and local Ollama integrations format responses into strict JSON templates containing title, summary, cause, effect, and risks keys.
-* **Verification Suite**: Integrated tests validate complete endpoint health, routing accuracy, and calculation accuracy.
+## Project Structure
+
+```bash
+OpenTerminal/
+├── backend/
+│   ├── app/
+│   │   ├── adapters/                       # Data Provider Ingestion Adapters (Phase 2)
+│   │   │   ├── base.py                     # IDataAdapter abstract interface
+│   │   │   ├── yfinance_adapter.py         # Yahoo Finance market data adapter
+│   │   │   ├── fred_adapter.py             # FRED US macroeconomic data adapter
+│   │   │   ├── worldbank_adapter.py        # World Bank global indicators adapter
+│   │   │   ├── rbi_adapter.py              # Reserve Bank of India policy rate adapter
+│   │   │   ├── rss_adapter.py              # Financial news RSS feed adapter
+│   │   │   └── csv_adapter.py              # Local CSV bulk dataset adapter
+│   │   ├── core/                           # EIOS Kernel Infrastructure (Phase 1)
+│   │   │   ├── boot.py                     # Dynamic plugin package auto-discovery loader
+│   │   │   ├── config.py                   # Pydantic environment configuration
+│   │   │   ├── container.py                # Pure DI Container instance & bindings
+│   │   │   ├── event_bus.py                # AsyncIO / Pydantic BaseEvent bus
+│   │   │   └── verify_phase1.py            # Core framework verification script
+│   │   ├── modules/                        # Dynamic Feature Plugin Packages
+│   │   │   ├── base.py                     # BaseModule plugin lifecycle contract
+│   │   │   └── test_mock/                  # Framework verification test module
+│   │   ├── routers/                        # REST & WebSocket API routers
+│   │   ├── services/                       # Legacy core services (Refactored to adapters)
+│   │   └── main.py                         # FastAPI App startup & lifespan coordinator
+│   └── tests/                              # Automated Unit & Integration Test Suites
+│       └── test_adapters.py                # Data Adapters unit test suite
+│
+├── frontend/                               # Next.js SPA Visual Terminal Client
+│   ├── src/
+│   │   ├── app/                            # Next.js App Router pages & styling
+│   │   └── components/                     # Dashboard widgets & AI Copilot panels
+│   └── package.json
+│
+├── doc/                                    # Architectural Documentation & Blueprints
+│   ├── architectural_analysis.md           # Reverse engineering analysis report
+│   ├── agent_terminal_blueprint.md         # Initial agent terminal specification
+│   └── eios_architectural_blueprint.md     # Master EIOS architectural specification
+└── README.md
+```
 
 ---
 
-## Demo
-Launch the application and run verification tests to view outputs:
-* Interactive glassmorphic visual pages on `http://localhost:3000`.
-* Verification test outputs from `python scripts/test_backend.py`.
-
----
-
-## Installation
+## Installation & Setup
 
 ### Prerequisites
 * **Python**: `3.9` or higher
 * **Node.js**: `18.x` or higher
-* **Package Managers**: `npm` (bundled with Node) and `pip` (bundled with Python)
+* **Package Managers**: `pip` and `npm`
 
-### 1. Backend Installation
-1. Navigate to the backend directory:
+### 1. Backend Setup
+1. Navigate to the `backend` directory:
    ```bash
    cd backend
    ```
-2. Create and activate a python virtual environment:
+2. Create and activate a Python virtual environment:
    ```bash
    python -m venv venv
    # On Windows:
@@ -133,25 +191,23 @@ Launch the application and run verification tests to view outputs:
    # On macOS/Linux:
    source venv/bin/activate
    ```
-3. Install dependencies:
+3. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-4. *(Optional)* Configure credentials by creating a `.env` file in the root of the `backend/` directory:
+4. *(Optional)* Configure environment credentials in `backend/.env`:
    ```env
-   GEMINI_API_KEY=your_gemini_key_here
-   OPENAI_API_KEY=your_openai_key_here
-   USE_OLLAMA=true # or false
-   OLLAMA_MODEL=mistral
-   OLLAMA_BASE_URL=http://localhost:11434
+   GEMINI_API_KEY=your_gemini_api_key_here
+   OPENAI_API_KEY=your_openai_api_key_here
+   USE_OLLAMA=false
    ```
 
-### 2. Frontend Installation
-1. Navigate to the frontend directory:
+### 2. Frontend Setup
+1. Navigate to the `frontend` directory:
    ```bash
    cd ../frontend
    ```
-2. Install package dependencies:
+2. Install Node package dependencies:
    ```bash
    npm install
    ```
@@ -160,83 +216,30 @@ Launch the application and run verification tests to view outputs:
 
 ## Usage
 
-### Running the Backend
-From the `backend/` directory with the virtual environment activated:
+### Running the Backend Server
+From the `backend/` directory:
 ```bash
 uvicorn app.main:app --reload --port 8000
 ```
-Interactive API documentation is available at [http://localhost:8000/docs](http://localhost:8000/docs).
+Interactive OpenAPI documentation is available at [http://localhost:8000/docs](http://localhost:8000/docs).
 
-### Running the Frontend
+### Running the Frontend Terminal Client
 From the `frontend/` directory:
 ```bash
 npm run dev
 ```
-The client UI will run at [http://localhost:3000](http://localhost:3000).
+Access the workstation UI at [http://localhost:3000](http://localhost:3000).
 
-### Running Verification Tests
-From the root workspace directory:
+### Running Automated Verification Test Suites
+Run the Data Adapters unit test suite:
 ```bash
-python scripts/test_backend.py
+python -m unittest backend/tests/test_adapters.py
 ```
 
----
-
-## Project Structure
+Run the Core Framework dynamic boot loader & event bus verification:
 ```bash
-OpenTerminal/                            # Root workspace directory
-├── backend/                             # Python ASGI Backend
-│   ├── app/
-│   │   ├── core/
-│   │   │   └── config.py                # Environment and configuration settings
-│   │   ├── routers/                     # HTTP and WebSocket API routers
-│   │   │   ├── ai.py                    # AI copilot & causality tracing endpoints
-│   │   │   ├── economy.py               # Indian macro indicator endpoints
-│   │   │   ├── market.py                # Financial market data endpoints
-│   │   │   ├── news.py                  # Macroeconomic news feed endpoints
-│   │   │   ├── scenario.py              # Stress-test simulation endpoints
-│   │   │   └── ws.py                    # WebSockets broadcasting connection manager
-│   │   ├── services/                    # Business logic & simulation engines
-│   │   │   ├── ai_analyst.py            # Natural Language Processing & LLM orchestrator
-│   │   │   ├── alternative_data.py      # Non-traditional indicator aggregates
-│   │   │   ├── economic_data.py         # Baseline domestic statistics database
-│   │   │   ├── forecasting.py           # Trend extrapolation models
-│   │   │   ├── market_data.py           # Brownian simulation & market tickers service
-│   │   │   ├── news_engine.py           # Geopolitical news feed generator
-│   │   │   ├── relationship_engine.py   # Macro graph causal tracer & nodes database
-│   │   │   └── scenario_simulator.py    # Structural shock simulation resolver
-│   │   └── main.py                      # FastAPI App initialization & lifecycle manager
-│   └── requirements.txt                 # Backend Python dependencies
-│
-├── frontend/                            # Next.js SPA Client
-│   ├── public/                          # Static assets and graphics
-│   ├── src/
-│   │   ├── app/                         # App router configuration
-│   │   │   ├── globals.css              # Global custom CSS and terminal styles
-│   │   │   ├── layout.tsx               # Primary application layout layout
-│   │   │   └── page.tsx                 # Main application dashboard layout
-│   │   └── components/                  # Reusable UI widgets
-│   │       ├── AICopilot/               # AI Analyst panels & relationship graphs
-│   │       ├── Dashboards/              # Panel views (Investor, Economist, etc.)
-│   │       ├── ScenarioSimulator/       # Stress-test sliders & simulation widgets
-│   │       └── CommandBar.tsx           # Omnibox keyboard command launcher
-│   └── package.json                     # Frontend Node dependencies
-│
-├── scripts/
-│   ├── commit_helper.py                 # Git utility script to rebuild project history
-│   ├── performance_benchmark.py         # Offline performance benchmark verification
-│   └── test_backend.py                  # Integration & API validation tests
-├── LICENSE                              # Project License
-└── README.md                            # Main Documentation
+python -m backend.app.core.verify_phase1
 ```
-
----
-
-## Future Improvements
-- [ ] **Data Persistence**: Integrate PostgreSQL/TimescaleDB databases to persist historical Brownian ticks and alternative data entries.
-- [ ] **Interactive Visual Charts**: Implement historical line and candlestick charts using TradingView Lightweight Charts on the Investor dashboard.
-- [ ] **Paper Trading Integration**: Connect paper trading brokerage APIs (e.g. Zerodha Kite Sandbox) to let students and investors test strategies against simulated ticks.
-- [ ] **Extended Economic Shock Scenarios**: Expand variables to simulate fiscal changes (taxation rates, government deficits) and external agricultural shocks.
 
 ---
 

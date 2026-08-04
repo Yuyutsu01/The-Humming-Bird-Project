@@ -3,7 +3,8 @@ import logging
 import random
 from datetime import datetime
 import pandas as pd
-import yfinance as yf
+from backend.app.core.container import container
+from backend.app.adapters.yfinance_adapter import YFinanceAdapter
 
 logger = logging.getLogger(__name__)
 
@@ -137,33 +138,10 @@ class MarketDataService:
 
     async def _fetch_ticker_data(self, ticker: str) -> tuple[float, float]:
         """
-        Fetches a single ticker using yfinance.
-        If it fails or returns empty, falls back to default values.
+        Delegates ticker price lookup to YFinanceAdapter resolved via DI Container.
         """
-        import os
-        if os.environ.get("MOCK_MARKET") == "true":
-            default_val, default_chg = self.default_prices.get(ticker, (100.0, 0.0))
-            return default_val, default_chg
-        try:
-            # Wrap yfinance call in asyncio thread pool executor
-            loop = asyncio.get_event_loop()
-            ticker_obj = yf.Ticker(ticker)
-            
-            # yfinance fast_info contains latest price
-            info = await loop.run_in_executor(None, lambda: ticker_obj.fast_info)
-            
-            if info and "last_price" in info and info["last_price"] is not None:
-                price = info["last_price"]
-                # Calculate change percentage based on open/prev close
-                prev_close = info.get("previous_close", price)
-                pct_change = ((price - prev_close) / prev_close * 100) if prev_close else 0.0
-                return price, pct_change
-        except Exception as e:
-            logger.warning(f"Error fetching {ticker} from yfinance: {e}. Using fallback.")
-            
-        # Fallback to simulated pricing if yfinance fails
-        default_val, default_chg = self.default_prices.get(ticker, (100.0, 0.0))
-        return default_val, default_chg
+        adapter: YFinanceAdapter = container.resolve(YFinanceAdapter)
+        return await adapter.fetch_ticker_data(ticker)
 
     def generate_simulated_ticks(self) -> dict:
         """

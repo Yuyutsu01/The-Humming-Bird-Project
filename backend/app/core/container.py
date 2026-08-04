@@ -2,6 +2,12 @@
 import logging
 from typing import Dict, Any, Callable
 from backend.app.core.event_bus import InMemoryEventBus, EventBroker
+from backend.app.adapters.yfinance_adapter import YFinanceAdapter
+from backend.app.adapters.fred_adapter import FREDAdapter
+from backend.app.adapters.worldbank_adapter import WorldBankAdapter
+from backend.app.adapters.rbi_adapter import RBIAdapter
+from backend.app.adapters.rss_adapter import RSSAdapter
+from backend.app.adapters.csv_adapter import CSVAdapter
 
 logger = logging.getLogger(__name__)
 
@@ -58,3 +64,11 @@ container = DependencyContainer()
 # --- Core Framework Bootstrap bindings ---
 # Register the shared InMemoryEventBus as the default EventBroker singleton
 container.register_singleton(EventBroker, InMemoryEventBus())
+
+# --- Data Ingestion Adapter Singletons ---
+container.register_singleton(YFinanceAdapter, YFinanceAdapter())
+container.register_singleton(FREDAdapter, FREDAdapter())
+container.register_singleton(WorldBankAdapter, WorldBankAdapter())
+container.register_singleton(RBIAdapter, RBIAdapter())
+container.register_singleton(RSSAdapter, RSSAdapter())
+container.register_singleton(CSVAdapter, CSVAdapter())
