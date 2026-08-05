@@ -9,6 +9,11 @@ from backend.app.adapters.rbi_adapter import RBIAdapter
 from backend.app.adapters.rss_adapter import RSSAdapter
 from backend.app.adapters.csv_adapter import CSVAdapter
 
+from backend.app.repositories.postgres_repo import PostgresRepository
+from backend.app.repositories.timeseries_repo import TimeSeriesRepository
+from backend.app.repositories.graph_repo import GraphRepository
+from backend.app.repositories.vector_repo import VectorRepository
+
 logger = logging.getLogger(__name__)
 
 class DependencyContainer:
@@ -72,3 +77,9 @@ container.register_singleton(WorldBankAdapter, WorldBankAdapter())
 container.register_singleton(RBIAdapter, RBIAdapter())
 container.register_singleton(RSSAdapter, RSSAdapter())
 container.register_singleton(CSVAdapter, CSVAdapter())
+
+# --- Database Storage Repository Singletons ---
+container.register_singleton(PostgresRepository, PostgresRepository())
+container.register_singleton(TimeSeriesRepository, TimeSeriesRepository())
+container.register_singleton(GraphRepository, GraphRepository())
+container.register_singleton(VectorRepository, VectorRepository())
