@@ -60,8 +60,10 @@ def bootstrap_modules(app: FastAPI) -> None:
                     # 5. Extract and mount the module router
                     router = module_instance.register_routes()
                     if isinstance(router, APIRouter):
-                        app.include_router(router)
-                        logger.info(f"Mounted API router from module '{module_name}' successfully.")
+                        from backend.app.core.config import settings
+                        prefix = "" if router.prefix.startswith(settings.API_V1_STR) else settings.API_V1_STR
+                        app.include_router(router, prefix=prefix)
+                        logger.info(f"Mounted API router from module '{module_name}' with prefix '{prefix}' successfully.")
                     else:
                         logger.warning(f"Module '{module_name}' did not return a valid APIRouter instance from register_routes(). Skipping route registration.")
                         

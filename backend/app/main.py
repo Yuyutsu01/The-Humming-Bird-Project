@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
-from backend.app.routers import market, economy, ai, news, scenario, ws
 from backend.app.services.market_data import market_data_service
 from backend.app.core.boot import bootstrap_modules
 
@@ -46,15 +45,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register endpoints routers
-app.include_router(market.router, prefix=settings.API_V1_STR)
-app.include_router(economy.router, prefix=settings.API_V1_STR)
-app.include_router(ai.router, prefix=settings.API_V1_STR)
-app.include_router(news.router, prefix=settings.API_V1_STR)
-app.include_router(scenario.router, prefix=settings.API_V1_STR)
-app.include_router(ws.router, prefix=settings.API_V1_STR)
-
-# Load dynamically registered agent modules
+# Dynamic Module Plugin Auto-Discovery Gateway
 bootstrap_modules(app)
 
 @app.get("/")
