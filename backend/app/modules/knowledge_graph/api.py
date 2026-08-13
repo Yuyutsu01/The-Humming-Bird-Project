@@ -1,7 +1,8 @@
 # Knowledge Graph & AI Copilot Plugin API Router
 import logging
 from fastapi import APIRouter, HTTPException, Query
-from backend.app.services.ai_analyst import ai_analyst_service
+from backend.app.core.container import container
+from backend.app.core.supervisor import SupervisorAgent
 from backend.app.services.relationship_engine import relationship_engine_service
 
 logger = logging.getLogger(__name__)
@@ -11,13 +12,15 @@ router = APIRouter(prefix="/ai", tags=["Knowledge Graph & AI Plugin"])
 @router.get("/ask")
 async def ask_copilot(query: str = Query(..., description="Economic query in natural language")):
     """
-    Answers an economic query by routing it through an LLM or local fallback engine.
+    Answers an economic query by delegating to the SupervisorAgent AI Swarm Orchestrator.
     """
     if not query.strip():
         raise HTTPException(status_code=400, detail="Query cannot be empty")
     try:
-        return await ai_analyst_service.ask_question(query)
+        supervisor: SupervisorAgent = container.resolve(SupervisorAgent)
+        return await supervisor.orchestrate(query)
     except Exception as e:
+        logger.error(f"Error executing AI Swarm orchestrator: {e}")
         raise HTTPException(status_code=500, detail=f"AI analyst error: {str(e)}")
 
 @router.get("/relationship/graph")

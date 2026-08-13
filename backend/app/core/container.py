@@ -14,6 +14,8 @@ from backend.app.repositories.timeseries_repo import TimeSeriesRepository
 from backend.app.repositories.graph_repo import GraphRepository
 from backend.app.repositories.vector_repo import VectorRepository
 
+from backend.app.core.supervisor import SupervisorAgent
+
 logger = logging.getLogger(__name__)
 
 class DependencyContainer:
@@ -83,3 +85,6 @@ container.register_singleton(PostgresRepository, PostgresRepository())
 container.register_singleton(TimeSeriesRepository, TimeSeriesRepository())
 container.register_singleton(GraphRepository, GraphRepository())
 container.register_singleton(VectorRepository, VectorRepository())
+
+# --- Cognitive Supervisor Swarm Singleton ---
+container.register_singleton(SupervisorAgent, SupervisorAgent())
