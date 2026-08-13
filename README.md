@@ -19,9 +19,10 @@ OpenTerminal bridges this gap by providing an open-source institutional financia
 1. **Macroeconomic Transmission Modeling**: Simulates the Commodity Price Channel, Interest Rate Differential Channel, and Safe-Haven Asset Channel dynamically.
 2. **Interactive Scenario Simulator**: Enables real-time stress testing of macro parameters (Crude prices, Fed rates, Geopolitical Risk Index) with instant offset calculations.
 3. **Causality Graph Engine**: Traces the shortest propagation pathways between economic variables using interactive node-link network graphs.
-4. **Resilient AI Copilot Swarm**: Delivers institutional narrative reports leveraging a multi-tier fallback architecture (Google Gemini ➔ OpenAI GPT-4 ➔ Local Ollama ➔ Offline Rule-Based Semantic Templates).
-5. **Event-Driven Plugin System**: A modular micro-kernel architecture where every feature is an independent plugin module auto-discovered at runtime.
-6. **Provider-Agnostic Data Adapters**: Unified ports decoupling data ingestion across Yahoo Finance, FRED, World Bank, RBI, RSS news feeds, and local CSV files.
+4. **Autonomous AI Swarm Architecture**: Multi-agent cognitive network featuring a `SupervisorAgent` orchestrator and specialized worker agents (`NewsAgent`, `MacroAgent`, `ForecastAgent`, `GraphAgent`, `RiskAgent`).
+5. **Resilient AI Copilot Swarm**: Delivers institutional narrative reports leveraging a multi-tier fallback architecture (Google Gemini ➔ OpenAI GPT-4 ➔ Local Ollama ➔ Offline Rule-Based Semantic Templates).
+6. **Event-Driven Plugin System**: A modular micro-kernel architecture where every feature is an independent plugin module auto-discovered at runtime.
+7. **Provider-Agnostic Data Adapters**: Unified ports decoupling data ingestion across Yahoo Finance, FRED, World Bank, RBI, RSS news feeds, and local CSV files.
 
 ---
 
@@ -47,7 +48,7 @@ OpenTerminal bridges this gap by providing an open-source institutional financia
                                               │ Publish Task              │ Return Synthesis
                                               ▼                           │
  ┌────────────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────┐
- │                                                      EVENT BUS (Pub/Sub)                                                        │
+ │                                                EVENT BROKER (Async Pub/Sub)                                                     │
  └──────┬──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬───────┘
         │ Raw News             │ Indicator Shift      │ Forecast Req         │ Causal Path Req      │ Risk Assessment      │ Alert
         ▼                      ▼                      ▼                      ▼                      ▼                      ▼
@@ -67,63 +68,24 @@ OpenTerminal bridges this gap by providing an open-source institutional financia
 ```
 
 ### Key Architectural Principles
+* **Autonomous AI Swarm Engine**: High-level natural language prompts are parsed by the `SupervisorAgent`, which dynamically generates sub-tasks, dispatches them across topic channels (`agent.task.*`), and aggregates multi-agent intelligence.
 * **Hexagonal Architecture (Ports and Adapters)**: Core domain logic is completely isolated from external dependencies. Data sources implement `IDataAdapter`; storage engines implement `IRepository`.
-* **Dynamic Plugin System**: Features are packaged into self-contained plugin modules inside `backend/app/modules/` implementing `BaseModule` / `IPluginModule`. The boot loader (`bootstrap_modules`) dynamically discovers, initializes, and mounts routes without modifying core files.
+* **Dynamic Plugin System**: Features are packaged into self-contained plugin modules inside `backend/app/modules/` implementing `BaseModule`. The boot loader (`bootstrap_modules`) dynamically discovers, initializes, and mounts routes without modifying core files.
 * **Event-Driven Pub/Sub**: Autonomous background agents communicate strictly via asynchronous domain events published onto the `EventBroker` (AsyncIO / Redis Pub/Sub).
-* **Dependency Injection Container**: A central `DependencyContainer` handles singleton resolution for event brokers, data adapters, and repository ports.
+* **Dependency Injection Container**: A central `DependencyContainer` handles singleton resolution for event brokers, data adapters, repository ports, and supervisor agents.
 
 ---
 
-## Core Features
+## Core Autonomous Swarm Agents
 
-### 1. Multi-Role Glassmorphic Dashboard
-Five desktop panels tailored for financial roles:
-* **Investor**: Real-time ticker feeds, custom SVG candlestick charts, and cross-asset correlation matrices.
-* **Economist**: Baseline macroeconomic indicators, interactive shock stress-test simulator, and AI forecasting trends with confidence intervals.
-* **Student**: Educational lesson modules and interactive macroeconomics quizzes.
-* **Research**: Geopolitical shock timelines and automated executive PDF report compiler.
-* **Government**: High-frequency alternative data tracking container port traffic and satellite night-light indices.
-
-### 2. Scenario Stress-Test Simulator
-Adjust parameters (Brent Crude, US Fed interest rate, Geopolitical Risk Index) via interactive sliders to observe instant simulated transmission impacts on CPI inflation, USD/INR exchange rates, RBI repo rate, GDP growth, and sector sensitivity indices.
-
-### 3. Macroeconomic Causality Network Graph
-An interactive SVG node-link visualization mapping variables (Crude Oil, Rupee, Corporate Profit Margins, Equity Multiples). Computes and highlights the shortest causal transmission paths between any two economic nodes.
-
-### 4. Omnibox Command Bar
-A global keyboard shortcut palette (`Ctrl+K` or `/`) allowing instant navigation between dashboards, scenario execution, and natural-language AI Analyst queries.
-
----
-
-## Tech Stack
-
-### Frontend Client
-* **Framework**: React 19, Next.js 16 (App Router), TypeScript
-* **Styling**: Tailwind CSS v4, Glassmorphic CSS custom properties
-* **Icons**: Lucide React
-* **State & Networking**: WebSockets streaming client, React Context
-
-### Backend Engine
-* **Language/Framework**: Python 3.9+, FastAPI, Uvicorn (ASGI Server)
-* **Architecture**: Domain-Driven Design (DDD), Hexagonal Architecture, Event-Driven Pub/Sub
-* **Data Adapters**: Yahoo Finance (`yfinance`), FRED API, World Bank Open Data, RBI Data, RSS Feed Scraper, CSV Importer
-* **Math & Analytics**: NumPy, Pandas, SciPy (Brownian motion simulations and regression modeling)
-* **AI Orchestration**: Google Gemini Pro API, OpenAI GPT-4 API, Local Ollama (Llama 3.2), Rule-based Semantic Template Engine
-
----
-
-## Data Provider Adapters Layer
-
-EIOS includes 6 provider-agnostic data adapters implementing the `IDataAdapter` interface:
-
-| Adapter | Source | Indicators / Metrics | Fallback Strategy |
+| Agent | Module Domain | Primary Responsibility | Event Topic Subscriptions |
 | :--- | :--- | :--- | :--- |
-| **`YFinanceAdapter`** | Yahoo Finance | Equities indices (`^NSEI`, `^GSPC`), commodities (`GC=F`, `BZ=F`), forex (`INR=X`) | Offline price matrix seed |
-| **`FREDAdapter`** | Federal Reserve Data | US Fed Funds Rate (`FEDFUNDS`), US CPI (`CPIAUCSL`), 10Y Yields (`GS10`) | Static macroeconomic seed series |
-| **`WorldBankAdapter`** | World Bank Open Data | India Annual GDP Growth (`NY.GDP.MKTP.KD.ZG`), CPI Inflation, Trade % of GDP | Structural annual series seed |
-| **`RBIAdapter`** | Reserve Bank of India | Repo Rate (`RBI_REPO`), Reverse Repo, CRR, SLR, Forex Reserves | Policy decision baseline seed |
-| **`RSSAdapter`** | Financial News RSS Feeds | RSS News articles, Monetary Policy releases, Energy announcements | Pre-seeded financial news feed |
-| **`CSVAdapter`** | Local Files | Proprietary offline time-series datasets (`data/*.csv`) | Synthetic time-series generator |
+| **`SupervisorAgent`** | Core Orchestrator | Natural language prompt intent parsing, task execution planning, and multi-agent synthesis | Gateway dispatcher |
+| **`NewsAgent`** | `news` | RSS feed ingestion, headline token deduplication, and sentiment score analysis | `agent.task.news` |
+| **`MacroAgent`** | `macro` | Transmission channel regressions (oil, Fed rate, geopolitics vs CPI & USD/INR) | `agent.task.macro` |
+| **`ForecastAgent`** | `forecast` | Machine learning trend extrapolations and 12-month confidence interval projections | `agent.task.forecast` |
+| **`GraphAgent`** | `knowledge_graph` | Macroeconomic causality network graph traversal and shortest path discovery | `agent.task.graph` |
+| **`RiskAgent`** | `risk` | Corporate sector vulnerability scoring and equity exposure analysis | `agent.task.risk` |
 
 ---
 
@@ -141,20 +103,32 @@ OpenTerminal/
 │   │   │   ├── rbi_adapter.py              # Reserve Bank of India policy rate adapter
 │   │   │   ├── rss_adapter.py              # Financial news RSS feed adapter
 │   │   │   └── csv_adapter.py              # Local CSV bulk dataset adapter
-│   │   ├── core/                           # EIOS Kernel Infrastructure (Phase 1)
+│   │   ├── core/                           # EIOS Kernel Infrastructure (Phase 1 & 4)
 │   │   │   ├── boot.py                     # Dynamic plugin package auto-discovery loader
 │   │   │   ├── config.py                   # Pydantic environment configuration
 │   │   │   ├── container.py                # Pure DI Container instance & bindings
 │   │   │   ├── event_bus.py                # AsyncIO / Pydantic BaseEvent bus
+│   │   │   ├── supervisor.py               # Autonomous AI Swarm Supervisor Agent
 │   │   │   └── verify_phase1.py            # Core framework verification script
-│   │   ├── modules/                        # Dynamic Feature Plugin Packages
-│   │   │   ├── base.py                     # BaseModule plugin lifecycle contract
+│   │   ├── modules/                        # Dynamic Feature Plugin Packages (Phase 3 & 4)
+│   │   │   ├── forecast/                   # Forecasting plugin module & ForecastAgent
+│   │   │   ├── knowledge_graph/            # Knowledge Graph plugin module & GraphAgent
+│   │   │   ├── macro/                      # Macro Scenario plugin module & MacroAgent
+│   │   │   ├── market/                     # Market Data & WebSockets plugin module
+│   │   │   ├── news/                       # News Intelligence plugin module & NewsAgent
+│   │   │   ├── risk/                       # Risk Analytics plugin module & RiskAgent
 │   │   │   └── test_mock/                  # Framework verification test module
-│   │   ├── routers/                        # REST & WebSocket API routers
-│   │   ├── services/                       # Legacy core services (Refactored to adapters)
+│   │   ├── repositories/                   # Storage Layer Repository Ports (Phase 3)
+│   │   │   ├── base.py                     # IRepository abstract interface
+│   │   │   ├── postgres_repo.py            # Relational PostgreSQL operational repository
+│   │   │   ├── timeseries_repo.py          # Time-Series metrics repository
+│   │   │   ├── graph_repo.py               # Neo4j knowledge graph repository
+│   │   │   └── vector_repo.py              # Vector embeddings & RAG repository
 │   │   └── main.py                         # FastAPI App startup & lifespan coordinator
 │   └── tests/                              # Automated Unit & Integration Test Suites
-│       └── test_adapters.py                # Data Adapters unit test suite
+│       ├── test_adapters.py                # Data Adapters unit test suite
+│       ├── test_modules.py                 # Plugin Modules & Repositories test suite
+│       └── test_agents.py                  # Swarm Agents & Supervisor test suite
 │
 ├── frontend/                               # Next.js SPA Visual Terminal Client
 │   ├── src/
@@ -231,6 +205,16 @@ npm run dev
 Access the workstation UI at [http://localhost:3000](http://localhost:3000).
 
 ### Running Automated Verification Test Suites
+Run the Swarm Agents unit test suite:
+```bash
+python -m unittest backend/tests/test_agents.py
+```
+
+Run the Plugin Modules unit test suite:
+```bash
+python -m unittest backend/tests/test_modules.py
+```
+
 Run the Data Adapters unit test suite:
 ```bash
 python -m unittest backend/tests/test_adapters.py
