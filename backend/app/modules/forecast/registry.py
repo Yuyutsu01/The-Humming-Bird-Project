@@ -3,6 +3,7 @@ import logging
 from fastapi import APIRouter
 from backend.app.modules.base import BaseModule
 from backend.app.modules.forecast.api import router
+from backend.app.modules.forecast.agents.forecast_agent import ForecastAgent
 from backend.app.core.container import container
 from backend.app.adapters.worldbank_adapter import WorldBankAdapter
 
@@ -17,6 +18,8 @@ class ForecastModule(BaseModule):
     def initialize(self) -> None:
         logger.info("Initializing ForecastModule...")
         self.worldbank_adapter = container.resolve(WorldBankAdapter)
+        self.forecast_agent = ForecastAgent()
+        self.forecast_agent.subscribe_topics()
 
     def register_routes(self) -> APIRouter:
         return router

@@ -3,6 +3,7 @@ import logging
 from fastapi import APIRouter
 from backend.app.modules.base import BaseModule
 from backend.app.modules.macro.api import router
+from backend.app.modules.macro.agents.macro_agent import MacroAgent
 from backend.app.core.container import container
 from backend.app.adapters.fred_adapter import FREDAdapter
 from backend.app.adapters.rbi_adapter import RBIAdapter
@@ -19,6 +20,8 @@ class MacroModule(BaseModule):
         logger.info("Initializing MacroModule...")
         self.fred_adapter = container.resolve(FREDAdapter)
         self.rbi_adapter = container.resolve(RBIAdapter)
+        self.macro_agent = MacroAgent()
+        self.macro_agent.subscribe_topics()
 
     def register_routes(self) -> APIRouter:
         return router
