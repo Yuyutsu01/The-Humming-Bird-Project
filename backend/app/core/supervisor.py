@@ -78,21 +78,22 @@ class SupervisorAgent:
             )
             await self.broker.publish(t["topic"], event)
 
-        # Synthesize outcomes based on intent
-        synthesis = self._synthesize_response(query, tasks)
+        # Synthesize outcomes based on intent and multi-tier LLM router
+        synthesis = await self._synthesize_response(query, tasks)
         return synthesis
 
-    def _synthesize_response(self, query: str, tasks: List[Dict[str, Any]]) -> Dict[str, Any]:
+    async def _synthesize_response(self, query: str, tasks: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Synthesizes structured macro intelligence payload from execution outcomes.
+        Synthesizes structured macro intelligence payload from execution outcomes and multi-tier LLM.
         """
+        from backend.app.services.llm_router import llm_router
+        router_res = await llm_router.query(query)
+        
         query_lower = query.lower()
         agent_names = [t["agent"] for t in tasks]
         
-        # Structured institutional response schema matching EIOS Copilot standards
         if "gold" in query_lower:
             title = "Gold Surge & Safe-Haven Asset Allocation Analysis"
-            summary = "Gold has breached key resistance levels driven by US Fed rate cut expectations and central bank reserve diversification."
             cause = "Declining US Treasury bond yields, DXY dollar index weakness, and geopolitical trade corridor risks."
             effect = "Capital flight into physical bullion and gold ETF instruments. Expansion of India's gold import trade deficit."
             india_impact = [
@@ -102,7 +103,6 @@ class SupervisorAgent:
             ]
         elif "oil" in query_lower or "brent" in query_lower:
             title = "Crude Oil Price Shock Transmission Analysis"
-            summary = "Global Brent Crude fluctuations ripple directly into India's current account balance and domestic cost-push inflation."
             cause = "OPEC+ supply reductions, shipping delays via Cape of Good Hope, and resilient global demand."
             effect = "Imported inflation surge, rising OMC fuel refining costs, and Rupee depreciation pressures."
             india_impact = [
@@ -112,7 +112,6 @@ class SupervisorAgent:
             ]
         else:
             title = f"Macroeconomic Swarm Intelligence Report: {query[:40]}"
-            summary = f"EIOS Autonomous Swarm evaluated query using agents: {', '.join(agent_names)}."
             cause = "Interconnected transmission dynamics between global capital flows and domestic policy interest rates."
             effect = "Adjustments across currency spot markets, inflation expectations, and equity multiple valuations."
             india_impact = [
@@ -121,10 +120,10 @@ class SupervisorAgent:
             ]
 
         return {
-            "engine": "EIOS Autonomous Swarm Agent Engine (v4.0)",
+            "engine": f"EIOS Autonomous Swarm [{router_res['provider']} ({router_res['model']})]",
             "query": query,
             "title": title,
-            "summary": summary,
+            "summary": router_res["text"],
             "cause": cause,
             "effect": effect,
             "india_impact": india_impact,
